@@ -63,3 +63,5 @@ Thumbs.db
 /application.yml
 /application-*.properties
 /application-*.yml
+
+*.gradle
