@@ -6,7 +6,8 @@ WORKDIR /home/gradle/project
 COPY --chown=gradle:gradle . .
 
 # Gradle Wrapper를 사용해 빌드 (테스트는 생략할 수 있음)
-RUN gradle clean bootJar --no-daemon
+RUN gradle clean bootJar --no-daemon --stacktrace
+
 
 # Stage 2: Run
 FROM openjdk:17-jdk-alpine
