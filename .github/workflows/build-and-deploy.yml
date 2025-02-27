@@ -50,4 +50,5 @@ jobs:
             --image asia-northeast3-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/ktb-be/backend:$GITHUB_SHA \
             --region ${{ secrets.CLOUD_RUN_REGION }} \
             --platform managed \
-            --allow-unauthenticated
+            --allow-unauthenticated \
+            --timeout=300  # 타임아웃을 300초로 설정
