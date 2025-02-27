@@ -32,6 +32,12 @@ jobs:
         with:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
 
+      - name: Configure Docker for Artifact Registry
+        run: |
+          echo "Configuring Docker authentication for Artifact Registry..."
+          gcloud auth configure-docker asia-northeast3-docker.pkg.dev --quiet
+          echo "Docker authentication configured successfully."
+
       - name: Build Docker Image
         run: |
           docker build -t asia-northeast3-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/ktb-be:$GITHUB_SHA .
