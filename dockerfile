@@ -20,13 +20,13 @@ COPY . .
 # Gradle 빌드 실행 (bootJar를 사용해 fat jar 생성)
 RUN gradle clean bootJar --no-daemon --stacktrace
 
-# Stage 2: Runtime using OpenJDK 21 (경량 Alpine 버전)
-FROM openjdk:21-jdk-alpine
+# Stage 2: Runtime using OpenJDK 21 (non-Alpine)
+FROM openjdk:21-jdk
 WORKDIR /app
 VOLUME /tmp
 EXPOSE 8080
 
-# 빌드 스테이지에서 생성된 jar 파일을 복사 (build/libs 폴더에 생성된 jar)
+# 빌드 스테이지에서 생성된 jar 파일 복사 (build/libs 폴더 내의 jar 파일)
 COPY --from=build /app/build/libs/*.jar app.jar
 
 ENTRYPOINT ["java", "-jar", "/app.jar"]
