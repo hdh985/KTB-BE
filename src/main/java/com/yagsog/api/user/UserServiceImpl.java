@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -41,28 +43,15 @@ public class UserServiceImpl implements UserService {
                 case "gender":
                     user.setGender(value);
                     break;
+                case "medications":
+                    user.setMedications(value);
+                    break;
                 default:
                     throw new IllegalArgumentException("updateUserInfo :: Invalid key: " + key);
             }
         });
     }
 
-    @Override
-    public void updateUserMedications(String cookieId, String medicationsStr) {
-        try {
-            Optional<User> optionalUser = userRepository.findByCookieId(cookieId);
-            if(optionalUser.isPresent()) {
-                User user = optionalUser.get();
-                String medicationsJson = convertToJson(medicationsStr);
-                user.setMedications(medicationsJson);
-                userRepository.save(user);
-            } else {
-                throw new RuntimeException("User not found : " + optionalUser);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     // String -> Json convert
     private String convertToJson(Object obj) throws JsonProcessingException {
@@ -72,5 +61,36 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<User> getUserByCookieId(String cookieId) {
         return Optional.empty();
+    }
+
+    @Override
+    public String getUserInfo(String cookieId, String key) {
+        User user = getUser(cookieId);
+
+        switch (key) {
+            case "name":
+                return user.getName();
+            case "age":
+                return String.valueOf(user.getAge());
+            case "gender":
+                return user.getGender();
+            case "medications":
+                return user.getMedications();
+            default:
+                return null;
+        }
+    }
+
+    @Override
+    public Map<String, String> getAllUserInfo(String cookieId) {
+        User user = getUser(cookieId);
+
+        Map<String, String> userInfo = new HashMap<>();
+        userInfo.put("name", user.getName());
+        userInfo.put("age", user.getAge());
+        userInfo.put("gender", user.getGender());
+        userInfo.put("medications", user.getMedications());
+
+        return userInfo;
     }
 }

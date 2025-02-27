@@ -51,43 +51,92 @@ public class UserController {
         updateInfo.put("name", name);
         userService.updateUserInfo(cookieId, updateInfo);
 
-        return ResponseEntity.ok(requestData);
-        //ApiResponse apiResponse = new ApiResponse("이름이 성공적으로 저장되었습니다.", requestData);
-        //return ResponseEntity.ok(apiResponse);
+        Map<String, String> response = new HashMap<>();
+        response.put("name", name);
+        return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/name")
+    public ResponseEntity<Map<String, String>> getName(@CookieValue(value = "USER_COOKIE", required = false) String cookieId) {
+        String name = userService.getUserInfo(cookieId, "name");
+
+        Map<String, String> response = new HashMap<>();
+        response.put("name", name);
+        return ResponseEntity.ok(response);
+    }
+
+
+
     @PatchMapping("/age")
-    public ResponseEntity<ApiResponse> updateAge(@CookieValue(value = "USER_COOKIE", required = false) String cookieId,
+    public ResponseEntity<Map<String, String>> updateAge(@CookieValue(value = "USER_COOKIE", required = false) String cookieId,
                                             @RequestBody Map<String, String> requestData) {
         String age = requestData.get("age");
         updateInfo.put("age", age);
         userService.updateUserInfo(cookieId, updateInfo);
 
-        ApiResponse apiResponse = new ApiResponse("나이가 성공적으로 저장되었습니다.", age);
-        return ResponseEntity.ok(apiResponse);
+        Map<String, String> response = new HashMap<>();
+        response.put("age", age);
+        return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/age")
+    public ResponseEntity<Map<String, String>> getAge(@CookieValue(value = "USER_COOKIE", required = false) String cookieId) {
+        String age = userService.getUserInfo(cookieId, "age");
+
+        Map<String, String> response = new HashMap<>();
+        response.put("age", age);
+        return ResponseEntity.ok(response);
+    }
+
+
+
     @PatchMapping("/gender")
-    public ResponseEntity<ApiResponse> updateGender(@CookieValue(value = "USER_COOKIE", required = false) String cookieId,
+    public ResponseEntity<Map<String, String>> updateGender(@CookieValue(value = "USER_COOKIE", required = false) String cookieId,
                                                @RequestBody Map<String, String> requestData) {
         String gender = requestData.get("gender");
         updateInfo.put("gender", gender);
         userService.updateUserInfo(cookieId, updateInfo);
 
-        ApiResponse apiResponse = new ApiResponse("성별이 성공적으로 저장되었습니다.", gender);
-        return ResponseEntity.ok(apiResponse);
+        Map<String, String> response = new HashMap<>();
+        response.put("gender", gender);
+        return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/gender")
+    public ResponseEntity<Map<String, String>> getGender(@CookieValue(value = "USER_COOKIE", required = false) String cookieId) {
+        String gender = userService.getUserInfo(cookieId, "gender");
+
+        Map<String, String> response = new HashMap<>();
+        response.put("gender", gender);
+        return ResponseEntity.ok(response);
+    }
+
+
+
     @PatchMapping("/medications")
-    public ResponseEntity<ApiResponse> updateMedications(@CookieValue(value = "USER_COOKIE", required = false) String cookieId,
+    public ResponseEntity<Map<String, String>> updateMedications(@CookieValue(value = "USER_COOKIE", required = false) String cookieId,
                                                     @RequestBody Map<String, String> requestData) {
         String medications = requestData.get("medications");
         updateInfo.put("medications", medications);
         userService.updateUserInfo(cookieId, updateInfo);
 
-        ApiResponse apiResponse = new ApiResponse("복약 정보가 성공적으로 저장되었습니다.", medications);
-        return ResponseEntity.ok(apiResponse);
+        Map<String, String> response = new HashMap<>();
+        response.put("medications", medications);
+        return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/medications")
+    public ResponseEntity<Map<String, String>> getMedications(@CookieValue(value = "USER_COOKIE", required = false) String cookieId) {
+        String medications = userService.getUserInfo(cookieId, "medications");
 
+        Map<String, String> response = new HashMap<>();
+        response.put("medications", medications);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/personal-info")
+    public ResponseEntity<Map<String, String>> getUserInfo(@CookieValue(value = "USER_COOKIE", required = false) String cookieId) {
+        Map<String, String> userInfo = userService.getAllUserInfo(cookieId);
+        return ResponseEntity.ok(userInfo);
+    }
 }
