@@ -1,17 +1,17 @@
-# Stage 1: Build using OpenJDK 21 (Debian-based slim image) and manually installed Gradle
+# Stage 1: Build using OpenJDK 21 (Debian-based slim image) and manually installed Gradle 8.3.1
 FROM openjdk:21-jdk-slim AS build
 WORKDIR /app
 
 # 필요한 패키지 설치: wget, unzip
 RUN apt-get update && apt-get install -y wget unzip
 
-# Gradle 8.2.1 다운로드 및 압축 해제
-RUN wget https://services.gradle.org/distributions/gradle-8.2.1-bin.zip -O gradle.zip && \
+# Gradle 8.3.1 다운로드 및 압축 해제
+RUN wget https://services.gradle.org/distributions/gradle-8.3.1-bin.zip -O gradle.zip && \
     unzip gradle.zip && \
     rm gradle.zip
 
 # Gradle 환경변수 설정
-ENV GRADLE_HOME=/app/gradle-8.2.1
+ENV GRADLE_HOME=/app/gradle-8.3.1
 ENV PATH=$GRADLE_HOME/bin:$PATH
 
 # 소스 코드 복사
