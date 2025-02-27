@@ -11,8 +11,10 @@ HELP.md
 !**/src/test/**/out/
 
 # Gradle 관련
+
 .gradle/
-!gradle/wrapper/gradle-wrapper.jar
+# 2025.02.27 20:13 gitignore 해제
+#!gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
 
