@@ -1,19 +1,32 @@
-# Stage 1: Build
-FROM gradle:8.2.1-jdk21 AS build
-WORKDIR /home/gradle/project
+# Stage 1: Build using OpenJDK 21 and manually installed Gradle
+FROM openjdk:21-jdk AS build
+WORKDIR /app
 
-# 소스 코드 전체 복사 (필요한 경우 .dockerignore로 불필요한 파일 제외)
-COPY --chown=gradle:gradle . .
+# 필요한 패키지 설치: wget, unzip
+RUN apt-get update && apt-get install -y wget unzip
 
-# Gradle Wrapper를 사용해 빌드 (테스트는 생략)
+# Gradle 8.2.1 다운로드 및 압축 해제
+RUN wget https://services.gradle.org/distributions/gradle-8.2.1-bin.zip -O gradle.zip && \
+    unzip gradle.zip && \
+    rm gradle.zip
+
+# Gradle 환경변수 설정
+ENV GRADLE_HOME=/app/gradle-8.2.1
+ENV PATH=$GRADLE_HOME/bin:$PATH
+
+# 소스 코드 복사
+COPY . .
+
+# Gradle 빌드 실행 (bootJar를 사용해 fat jar 생성)
 RUN gradle clean bootJar --no-daemon --stacktrace
 
-# Stage 2: Run
+# Stage 2: Runtime using OpenJDK 21 (경량 Alpine 버전)
 FROM openjdk:21-jdk-alpine
+WORKDIR /app
 VOLUME /tmp
 EXPOSE 8080
 
-# 빌드 스테이지에서 생성된 fat jar 파일 복사 (build/libs 폴더 내의 jar 파일)
-COPY --from=build /home/gradle/project/build/libs/*.jar app.jar
+# 빌드 스테이지에서 생성된 jar 파일을 복사 (build/libs 폴더에 생성된 jar)
+COPY --from=build /app/build/libs/*.jar app.jar
 
 ENTRYPOINT ["java", "-jar", "/app.jar"]
