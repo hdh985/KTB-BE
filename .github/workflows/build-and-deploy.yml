@@ -34,22 +34,20 @@ jobs:
 
       - name: Configure Docker for Artifact Registry
         run: |
-          echo "Configuring Docker authentication for Artifact Registry..."
           gcloud auth configure-docker asia-northeast3-docker.pkg.dev --quiet
-          echo "Docker authentication configured successfully."
 
       - name: Build Docker Image
         run: |
-          docker build -t asia-northeast3-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/ktb-be:$GITHUB_SHA .
+          docker build -t asia-northeast3-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/ktb-be/backend:$GITHUB_SHA .
 
       - name: Push Docker Image
         run: |
-          docker push asia-northeast3-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/ktb-be:$GITHUB_SHA
+          docker push asia-northeast3-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/ktb-be/backend:$GITHUB_SHA
 
       - name: Deploy to Cloud Run
         run: |
-          gcloud run deploy ktb-be \
-            --image asia-northeast3-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/ktb-be:$GITHUB_SHA \
+          gcloud run deploy backend \
+            --image asia-northeast3-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/ktb-be/backend:$GITHUB_SHA \
             --region ${{ secrets.CLOUD_RUN_REGION }} \
             --platform managed \
             --allow-unauthenticated
