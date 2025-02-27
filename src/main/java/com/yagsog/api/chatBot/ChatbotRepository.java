@@ -8,4 +8,5 @@ import java.util.List;
 @Repository
 public interface ChatbotRepository extends JpaRepository<Chatbot, Long> {
     List<Chatbot> findByCookieIdOrderByCreatedAtAsc(String cookieId);
+    int countByCookieId(String cookieId);
 }

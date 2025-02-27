@@ -65,8 +65,6 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
-
-
     @PatchMapping("/age")
     public ResponseEntity<Map<String, String>> updateAge(@CookieValue(value = "USER_COOKIE", required = false) String cookieId,
                                             @RequestBody Map<String, String> requestData) {
@@ -139,4 +137,5 @@ public class UserController {
         Map<String, String> userInfo = userService.getAllUserInfo(cookieId);
         return ResponseEntity.ok(userInfo);
     }
+
 }
