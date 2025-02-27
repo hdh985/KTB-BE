@@ -5,7 +5,7 @@ WORKDIR /app
 # 필요한 패키지 설치: wget, unzip
 RUN apt-get update && apt-get install -y wget unzip
 
-# Gradle 8.8 다운로드 및 압축 해제
+# Gradle 8.8 다운로드 및 압축 해제 (Gradle 8.8는 JDK 22를 지원)
 RUN wget https://services.gradle.org/distributions/gradle-8.8-bin.zip -O gradle.zip && \
     unzip gradle.zip && \
     rm gradle.zip
@@ -17,8 +17,8 @@ ENV PATH=$GRADLE_HOME/bin:$PATH
 # 소스 코드 복사
 COPY . .
 
-# Gradle 빌드 실행 (bootJar를 사용해 fat jar 생성)
-RUN gradle clean bootJar --no-daemon --stacktrace
+# Gradle 빌드 실행 (도구체인 자동 감지 비활성화)
+RUN gradle -Dorg.gradle.java.installations.auto-detect=false clean bootJar --no-daemon --stacktrace
 
 # Stage 2: Runtime using OpenJDK 22 (Debian-based slim image)
 FROM openjdk:22-jdk-slim
