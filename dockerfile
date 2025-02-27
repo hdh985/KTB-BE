@@ -1,5 +1,5 @@
-# Stage 1: Build using OpenJDK 21 and manually installed Gradle
-FROM openjdk:21-jdk AS build
+# Stage 1: Build using OpenJDK 21 (Debian-based slim image) and manually installed Gradle
+FROM openjdk:21-jdk-slim AS build
 WORKDIR /app
 
 # 필요한 패키지 설치: wget, unzip
@@ -20,8 +20,8 @@ COPY . .
 # Gradle 빌드 실행 (bootJar를 사용해 fat jar 생성)
 RUN gradle clean bootJar --no-daemon --stacktrace
 
-# Stage 2: Runtime using OpenJDK 21 (non-Alpine)
-FROM openjdk:21-jdk
+# Stage 2: Runtime using OpenJDK 21 (Debian-based slim image)
+FROM openjdk:21-jdk-slim
 WORKDIR /app
 VOLUME /tmp
 EXPOSE 8080
