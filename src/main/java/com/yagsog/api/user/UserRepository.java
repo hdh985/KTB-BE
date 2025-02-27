@@ -8,9 +8,11 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
+    //User createUser(String cookieId);
+
     User save(User user); // 사용자 정보 저장
 
     List<User> findAll();
 
-    Optional<User> findById(Long id);
+    Optional<User> findByCookieId(String cookieId);
 }

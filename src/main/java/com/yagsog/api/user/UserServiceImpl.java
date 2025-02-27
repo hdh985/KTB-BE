@@ -1,11 +1,11 @@
 package com.yagsog.api.user;
 
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -15,17 +15,23 @@ public class UserServiceImpl implements UserService {
     private final ObjectMapper objectMapper;
 
     @Override
-    public User createUser() {
-        User user = new User();
-        return userRepository.save(user);
+    public User createUser(String cookieId) {
+        User newUser = new User(cookieId);
+        return userRepository.save(newUser);
+    }
+
+    public User getUser(String cookieId) {
+        return userRepository.findByCookieId(cookieId)
+                .orElseThrow(() -> new IllegalArgumentException("getUser :: User not found"));
     }
 
     @Override
-    public void updateUserInfo(Long id, String field, String value) {
-        Optional<User> optionalUser = userRepository.findById(id);
-        if(optionalUser.isPresent()) {
-            User user = optionalUser.get();
-            switch(field) {
+    public void updateUserInfo(String cookieId, Map<String, String> updateInfo) {
+        User user = userRepository.findByCookieId(cookieId)
+                .orElseThrow(() -> new IllegalArgumentException("updateUserInfo :: User not found"));
+
+        updateInfo.forEach((key, value) -> {
+            switch(key) {
                 case "name":
                     user.setName(value);
                     break;
@@ -36,15 +42,15 @@ public class UserServiceImpl implements UserService {
                     user.setGender(value);
                     break;
                 default:
-                    throw new IllegalArgumentException("Invalid field: " + field);
+                    throw new IllegalArgumentException("updateUserInfo :: Invalid key: " + key);
             }
-        }
+        });
     }
 
     @Override
-    public void updateUserMedications(Long id, String medicationsStr) {
+    public void updateUserMedications(String cookieId, String medicationsStr) {
         try {
-            Optional<User> optionalUser = userRepository.findById(id);
+            Optional<User> optionalUser = userRepository.findByCookieId(cookieId);
             if(optionalUser.isPresent()) {
                 User user = optionalUser.get();
                 String medicationsJson = convertToJson(medicationsStr);
@@ -64,7 +70,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> getUserById(Long id) {
+    public Optional<User> getUserByCookieId(String cookieId) {
         return Optional.empty();
     }
 }

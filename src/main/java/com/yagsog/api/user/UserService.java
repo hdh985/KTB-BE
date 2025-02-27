@@ -1,11 +1,12 @@
 package com.yagsog.api.user;
 
+import java.util.Map;
 import java.util.Optional;
 
 public interface UserService {
-    User createUser();
-    void updateUserInfo(Long id, String field, String value);
-    void updateUserMedications(Long id, String medicationsJson);
-    Optional<User> getUserById(Long id);
-
+    User createUser(String cookieId);
+    void updateUserInfo(String cookieId, Map<String, String> updateInfo);
+    void updateUserMedications(String cookieId, String medicationsJson);
+    Optional<User> getUserByCookieId(String cookieId);
+    public User getUser(String cookieId);
 }
